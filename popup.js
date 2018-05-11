@@ -19,3 +19,14 @@
 //         {code: 'document.body.style.backgroundColor = "' + color + '";'});
 //   });
 // };
+
+
+const activateCheckbox = document.getElementById('activateCheckbox');
+
+chrome.storage.sync.get('active', function (data) {
+    activateCheckbox.checked = data.active;
+});
+
+activateCheckbox.onchange = function() {
+    chrome.runtime.sendMessage({activeStatusChange: activateCheckbox.checked});
+};

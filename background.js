@@ -18,16 +18,31 @@
 //   });
 // });
 
-var localRequire = 'https://localhost:3000/playground/require.js';
-chrome.webRequest.onBeforeRequest.addListener(
-    function() {
-        return {redirectUrl: localRequire};
-    },
-    {
-        urls: [
-            "*://static.parastorage.com/services/third-party/requirejs/2.1.15/require.min.js"
-        ],
-        types: ["script"]
-    },
-    ["blocking"]
-);
+chrome.runtime.onInstalled.addListener(function() {
+    setActiveState(true);
+});
+
+chrome.runtime.onMessage.addListener( function(request) {
+    setActiveState(request.activeStatusChange);
+});
+
+function setActiveState(isActive) {
+    chrome.storage.sync.set({active: isActive});
+    if (isActive) {
+        chrome.webRequest.onBeforeRequest.addListener(
+            requireRedirect,
+            {
+                urls: ["*://static.parastorage.com/services/third-party/requirejs/2.1.15/require.min.js"],
+                types: ["script"]
+            },
+            ["blocking"]
+        );
+    } else {
+        chrome.webRequest.onBeforeRequest.removeListener(requireRedirect)
+    }
+}
+
+function requireRedirect() {
+    return {redirectUrl: 'https://michabeeri.github.io/requirer/require.js'};
+}
+
