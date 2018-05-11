@@ -18,17 +18,14 @@
 //   });
 // });
 
-chrome.runtime.onInstalled.addListener(function() {
-    setActiveState(true);
-});
-
 chrome.runtime.onMessage.addListener( function(request) {
-    setActiveState(request.activeStatusChange);
+    if (request.traceRequireTree) {
+        setActiveState(true);
+    }
 });
 
 function setActiveState(isActive) {
-    chrome.storage.sync.set({active: isActive});
-    if (isActive) {
+    if (isActive && !chrome.webRequest.onBeforeRequest.hasListener(requireRedirect)) {
         chrome.webRequest.onBeforeRequest.addListener(
             requireRedirect,
             {
@@ -43,6 +40,7 @@ function setActiveState(isActive) {
 }
 
 function requireRedirect() {
+    setActiveState(false);
     return {redirectUrl: 'https://michabeeri.github.io/requirer/require.js'};
 }
 

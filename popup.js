@@ -20,13 +20,14 @@
 //   });
 // };
 
+const refreshButton = document.getElementById('refreshButton');
 
-const activateCheckbox = document.getElementById('activateCheckbox');
-
-chrome.storage.sync.get('active', function (data) {
-    activateCheckbox.checked = data.active;
-});
-
-activateCheckbox.onchange = function() {
-    chrome.runtime.sendMessage({activeStatusChange: activateCheckbox.checked});
+refreshButton.onclick = function() {
+    chrome.runtime.sendMessage({traceRequireTree: true}, function () {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.executeScript(
+                tabs[0].id,
+                {code: 'window.location.reload();'});
+        });
+    });
 };
