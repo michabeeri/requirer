@@ -41,6 +41,6 @@ function setActiveState(isActive) {
 
 function requireRedirect() {
     setActiveState(false);
-    return {redirectUrl: 'https://michabeeri.github.io/requirer/require.js'};
+    return {redirectUrl: 'https://localhost:3000/requirer/require.js'};
 }
 
