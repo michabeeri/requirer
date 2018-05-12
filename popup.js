@@ -21,22 +21,25 @@
 // };
 
 const refreshButton = document.getElementById('refreshButton');
-const resultsButton = document.getElementById('resultsButton');
+// const resultsButton = document.getElementById('resultsButton');
 
 refreshButton.onclick = function() {
     chrome.runtime.sendMessage({traceRequireTree: true}, function () {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.executeScript(
-                tabs[0].id,
-                {code: 'window.location.reload();'});
+            chrome.tabs.executeScript(tabs[0].id, {code: 'window.location.reload();'});
+            setTimeout(function() {
+                chrome.tabs.executeScript(tabs[0].id, {file: 'contentExtraction.js'}, function (data) {
+                    // console.log(data[0]);
+                });
+            }, 5000);
         });
     });
 };
 
-resultsButton.onclick = function() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.executeScript(tabs[0].id, {file: 'contentExtraction.js'}, function (data) {
-            console.log(data[0]);
-        });
-    });
-};
+// resultsButton.onclick = function() {
+//     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+//         chrome.tabs.executeScript(tabs[0].id, {file: 'contentExtraction.js'}, function (data) {
+//             console.log(data[0]);
+//         });
+//     });
+// };

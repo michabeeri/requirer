@@ -24,6 +24,16 @@ chrome.runtime.onMessage.addListener( function(request) {
     }
 });
 
+chrome.browserAction.onClicked.addListener(function(tab) {
+    setActiveState(true);
+    chrome.tabs.executeScript(tab.id, {code: 'window.location.reload();'});
+    setTimeout(function() {
+        chrome.tabs.executeScript(tab.id, {file: 'contentExtraction.js'}, function (data) {
+            // console.log(data[0]);
+        });
+    }, 8000);
+});
+
 function setActiveState(isActive) {
     if (isActive && !chrome.webRequest.onBeforeRequest.hasListener(requireRedirect)) {
         chrome.webRequest.onBeforeRequest.addListener(
@@ -41,6 +51,6 @@ function setActiveState(isActive) {
 
 function requireRedirect() {
     setActiveState(false);
-    return {redirectUrl: 'https://localhost:3000/requirer/require.js'};
+    return {redirectUrl: 'https://michabeeri.github.io/requirer/require.js'};
 }
 
