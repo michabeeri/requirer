@@ -1715,9 +1715,10 @@ var requirejs, require, define, dependencyTree = {};
         const dependencies = [].map.call(depArg, a => /^([\w\d\-_]*)/.exec(a)[1]).filter(n => n !== callerData.caller);
         dependencies.forEach(d => {
             if (!dependencyTree[d]) {
-                dependencyTree[d] = callerData.at;
+                dependencyTree[d] = [];
             }
-        })
+            dependencyTree[d].push(callerData.at);
+        });
 
         //Find the right context, use default
         var context, config,
@@ -2036,9 +2037,10 @@ var requirejs, require, define, dependencyTree = {};
         const dependencies = [].map.call(depArg, a => /^([\w\d\-_]*)/.exec(a)[1]).filter(n => n !== callerData.caller);
         dependencies.forEach(d => {
             if (!dependencyTree[d]) {
-                dependencyTree[d] = callerData.at;
+                dependencyTree[d] = [];
             }
-        })
+            dependencyTree[d].push(callerData.at);
+        });
 
         // const stack = getStackTrace();
         // console.log(`caller: ${caller}, dependencies: ${dependencies}`);
